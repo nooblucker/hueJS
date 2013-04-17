@@ -7,10 +7,24 @@ define(['jquery', './bridge'], function($, Bridge) {
         this.bridges = [];
         this.username = null;
         this.devicetype = 'hueJS';
+        
+        this.loadFromLocalStorage();
     }
+    
+    Hue.prototype.loadFromLocalStorage = function() {
+        // TODO: use modernizr if (Modernizr.localstorage)
+        this.bridge = localStorage.getItem('bridge-ip') ? new Bridge(localStorage.getItem('bridge-ip')) : null;
+        this.username = localStorage.getItem('username') || null;
+    };
     
     Hue.prototype.setBridge = function(ip) {
         this.bridge = new Bridge(ip);
+        localStorage.setItem('bridge-ip', ip);
+    }
+    
+    Hue.prototype.setUsername = function(username) {
+        this.username = username;
+        localStorage.setItem('username', username);
     }
     
     Hue.prototype.setBridges = function(bridges) {
