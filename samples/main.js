@@ -4,7 +4,7 @@ requirejs.config({
 
 requirejs(['jquery', 'hue/hue'], function($, Hue) {
     
-    window.myHue = new Hue("myUserName");
+    window.myHue = new Hue();
     
     $("#hue-connect").on('submit', function(event) {
         event.preventDefault();

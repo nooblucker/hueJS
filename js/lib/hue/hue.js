@@ -2,13 +2,12 @@ define(['jquery', './bridge'], function($, Bridge) {
     
     var UPnPURL = "http://www.meethue.com/api/nupnp";
     
-    function Hue(username) {
-        this.username = username;
+    function Hue() {
         this.bridges = [];
     }
 
     Hue.prototype.addBridge = function(ip) {
-        this.bridges.push(new Bridge(ip, this.username));
+        this.bridges.push(new Bridge(ip));
     };
     
     Hue.prototype.queryBridges = function() {
