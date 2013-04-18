@@ -11,9 +11,11 @@ define(['jquery', './bridge'], function($, Bridge) {
         this.bridges.push(new Bridge(ip, this.username));
     };
     
-    Hue.prototype.getBridges = function() {
+    Hue.prototype.queryBridges = function() {
         // TODO: API does not support JSONP
-        $.getJSON(UPnPURL+"?callback=?", this.setBridges);
+        $.getJSON(UPnPURL+"?callback=?", function(bridges) {
+            console.log(bridges);
+        });
     };
 
     return Hue;
