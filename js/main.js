@@ -4,12 +4,11 @@ requirejs.config({
 
 requirejs(['jquery', 'hue/hue'], function($, Hue) {
     
-    window.myHue = new Hue();
+    window.myHue = new Hue("myUserName");
     
     $("#hue-connect").on('submit', function(event) {
         event.preventDefault();
-        myHue.setBridge($("#hue-connect input[name='ip']").val());
-        myHue.setUsername($("#hue-connect input[name='username']").val());
+        myHue.addBridge($("#hue-connect input[name='ip']").val());
     });
     
 });
