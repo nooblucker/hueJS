@@ -74,9 +74,12 @@ define(['hue/light', 'hue/request'], function(Light, Request) {
                     AUTHORIZE_TIMER = setTimeout(function() {
                         that.createUsername(username);
                     }, INTERVAL_RETRY_LINKBUTTON);
+                } else {
+                    alert('Could not connect to bridge. Did you press the linkbutton?');
                 }
-                
-            } else if (authorized(response)) {
+            }
+            
+            else if (authorized(response)) {
                 that.setUsername(response.success.username);
                 clearTimeout(AUTHORIZE_TIMER);
             }
