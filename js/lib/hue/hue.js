@@ -42,16 +42,7 @@ define(['backbone', './bridge'], function(Backbone, Bridge) {
                     that.addBridge(bridge.ip);
                 });
             })
-        
-            .fail(function(response) {
-                console.log("always failing cause no JSONP");
-                _.each([ {
-                    ip: '192.168.2.109'
-                } ], function(bridge) {
-                    that.addBridge(bridge.ip);
-                });
-            });
-        
+
             return this;
         }
         

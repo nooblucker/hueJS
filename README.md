@@ -1,5 +1,7 @@
 # hueJS: a JavaScript library for Philips hue
 
+hueJS is a JavaScript library, based on requireJS, Backbone, Underscore and jQuery. 
+
 ## Install
 
 All you need is to unzip the `js` folder of hueJS somewhere on your filesystem.
@@ -36,8 +38,11 @@ requirejs(['lib/jquery', 'lib/hue/hue'], function($, Hue) {
     // create instance of Hue
     window.myHue = new Hue();
 
-    // hue will look for local bridges. if one is found, it attempts to connect with a unique username.
-    // if the bridge authorizes the user, the 'connect' event is fired:
+    // connect to bridge
+    myHue.addBridge('192.168.2.109');
+    // when the API supports JSONP, Hue will automatically look for bridges in the network
+
+    // if a bridge authorizes the user, the 'connect' event is fired:
     myHue.on('connect', function(bridge) {
         // now we can do stuff with the bridge
         console.log(bridge.get('ip') + ' connected with username ' + bridge.get('username'));
@@ -51,5 +56,5 @@ requirejs(['lib/jquery', 'lib/hue/hue'], function($, Hue) {
 ## Dependencies
 * [jQuery](http://jquery.com/)
 * [requireJS](http://requirejs.org/)
-* BackboneJS(http://backbonejs.org/)
-* UnderscoreJS(http://underscorejs.org/)
+* [BackboneJS](http://backbonejs.org/)
+* [UnderscoreJS](http://underscorejs.org/)

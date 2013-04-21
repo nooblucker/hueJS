@@ -15,6 +15,8 @@ requirejs(['jquery', 'hue/hue'], function($, Hue) {
     
     window.myHue = new Hue();
     
+    myHue.addBridge('192.168.2.109');
+    
     myHue.on('connect', function(bridge) {
         console.log(bridge.get('ip') + ' connected with username ' + bridge.get('username'));
     });
