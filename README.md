@@ -36,6 +36,15 @@ requirejs(['lib/jquery', 'lib/hue/hue'], function($, Hue) {
     // create instance of Hue
     window.myHue = new Hue();
 
+    // hue will look for local bridges. if one is found, it attempts to connect with a unique username.
+    // if the bridge authorizes the user, the 'connect' event is fired:
+    myHue.on('connect', function(bridge) {
+        // now we can do stuff with the bridge
+        console.log(bridge.get('ip') + ' connected with username ' + bridge.get('username'));
+        // for example, turn all lights that belong to the bridge, off!
+        // ...
+    });
+
 });
 ```
 
