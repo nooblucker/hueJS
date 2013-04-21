@@ -1,23 +1,21 @@
-define(['jquery'], function($) {
+define(['jquery', 'backbone'], function($, Backbone) {
     
-    function Request(options) {
-        this.params = $.extend(true, {
+    return Backbone.Model.extend({
+        
+        defaults: {
             url: '',
             body: {},
             method: 'GET'
-        }, options);
+        },
         
-        return this.send();
-    }
-    
-    Request.prototype.send = function() {
-        return $.ajax({
-            url: this.params.url,
-            type: this.params.method,
-            data: this.params.body
-        });
-    }
-    
-    return Request;
+        send: function() {
+            return $.ajax({
+                url: this.get('url'),
+                type: this.get('method'),
+                data: this.get('body')
+            });
+        }
+        
+    });
     
 });

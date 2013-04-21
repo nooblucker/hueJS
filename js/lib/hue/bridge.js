@@ -1,4 +1,4 @@
-define(['hue/light', 'hue/request'], function(Light, Request) {
+define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Request) {
 
     var ERRORS = {
         unauthorizedUser: 1,
@@ -7,43 +7,8 @@ define(['hue/light', 'hue/request'], function(Light, Request) {
     
     var INTERVAL_RETRY_LINKBUTTON = 2000;
     var AUTHORIZE_FAILCOUNT = 0;
-    var MAX_RETRIES = 50;
+    var MAX_RETRIES = 15;
     var AUTHORIZE_TIMER = null;
-
-    function Bridge(ip) {
-        this.ip = ip;
-        this.username = localStorage.getItem('username') || '';
-        this.devicetype = 'hueJS';
-        this.lights = [];
-        
-        this.authorize(this.username);
-    }
-    
-    Bridge.prototype.authorize = function(username) {
-        var req = this.doRequest();
-        var that = this;
-        req.done(function(response) {
-            if (unauthorized(response)) {
-                AUTHORIZE_FAILCOUNT = 0;
-                alert('please push link button');
-                that.createUsername(username);
-            } else {
-                console.log('hello '+username);
-                console.log(response);
-            }
-        });
-        req.fail(function(response) {
-            console.log('failbob');
-        });
-    };
-    
-    Bridge.prototype.doRequest = function(url, method, body) {
-        return new Request({
-            url: this.getApiUrl() + (url || ''),
-            method: method,
-            body: body
-        });
-    };
     
     function unauthorized(response) {
         return response[0] && response[0].error && response[0].error.type == ERRORS.unauthorizedUser;
@@ -57,49 +22,95 @@ define(['hue/light', 'hue/request'], function(Light, Request) {
         return response[0] && response[0].error && response[0].error.type == ERRORS.linkButtonNotPressed;
     }
     
-    Bridge.prototype.createUsername = function(username) {
-        var that = this;
-        var request = new Request({
-            url: this.getBaseApiUrl(),
-            method: 'POST',
-            body: {
-                devicetype: this.devicetype,
-                username: username
+    
+    return Backbone.Model.extend({
+        
+        devicetype: 'hueJS',
+        
+        defaults: {
+            ip: '',
+            username: ''
+        },
+        
+        initialize: function() {
+            this.set('username', localStorage.getItem('username') || '');
+            this.authorize();
+            this.on('change:username', function(obj, username) {
+                localStorage.setItem('username', username);
+            });
+        },
+        
+        authorize: function() {
+            if (this.get('username') == '') {
+                this.createUsername('');
+                return;
             }
-        });
-        request.done(function(response) {
-            
-            if (linkButtonNotPressed(response)) {
-                if (AUTHORIZE_FAILCOUNT++ < MAX_RETRIES) {
-                    AUTHORIZE_TIMER = setTimeout(function() {
-                        that.createUsername(username);
-                    }, INTERVAL_RETRY_LINKBUTTON);
+            var req = this.doRequest();
+            var that = this;
+            req.done(function(response) {
+                if (unauthorized(response)) {
+                    AUTHORIZE_FAILCOUNT = 0;
+                    that.createUsername(that.get('username'));
                 } else {
-                    alert('Could not connect to bridge. Did you press the linkbutton?');
+                    console.log('hello '+that.get('username'));
+                    console.log(response);
                 }
-            }
-            
-            else if (authorized(response)) {
-                that.setUsername(response.success.username);
-                clearTimeout(AUTHORIZE_TIMER);
-            }
-            
-        });
-    };
-    
-    Bridge.prototype.setUsername = function(username) {
-        this.username = username;
-        localStorage.setItem('username', username);
-    };
+            });
+            req.fail(function(response) {
+                console.log(response);
+            });
+        },
         
-    Bridge.prototype.getBaseApiUrl = function() {
-        return 'http://'+this.ip+'/api';
-    };
-    
-    Bridge.prototype.getApiUrl = function() {
-        return this.getBaseApiUrl()+this.username;
-    };
+        doRequest: function(url, method, body) {
+            return new Request({
+                url: this.getApiUrl() + (url || ''),
+                method: method,
+                body: body
+            }).send();
+        },
         
-    return Bridge;
+        createUsername: function(username) {
+            var that = this;
+            var request = new Request({
+                url: this.getBaseApiUrl(),
+                method: 'POST',
+                body: {
+                    devicetype: this.devicetype,
+                    username: username
+                }
+            });
+            request.send().done(function(response) {
+            
+                if (linkButtonNotPressed(response)) {
+                    if (AUTHORIZE_FAILCOUNT++ < MAX_RETRIES) {
+                        if (AUTHORIZE_FAILCOUNT == 1) {
+                            alert('please push link button');
+                        }
+                        AUTHORIZE_TIMER = setTimeout(function() {
+                            that.createUsername(username);
+                        }, INTERVAL_RETRY_LINKBUTTON);
+                    } else {
+                        alert('Could not connect to bridge. Did you press the linkbutton?');
+                    }
+                }
+            
+                else if (authorized(response)) {
+                    that.set('username', response[0].success.username);
+                    clearTimeout(AUTHORIZE_TIMER);
+                }
+            
+            });
+        },
+        
+        getApiUrl: function() {
+            var user = this.get('username') != '' ? '/'+this.get('username') : '';
+            return this.getBaseApiUrl()+user;
+        },
+        
+        getBaseApiUrl: function() {
+            return 'http://'+this.get('ip')+'/api';
+        }
+        
+    });
     
 });

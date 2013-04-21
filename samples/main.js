@@ -1,5 +1,14 @@
 requirejs.config({
-    baseUrl: '../js/lib'
+    baseUrl: '../js/lib',
+    shim: {
+        'backbone': {
+            deps: ['underscore', 'jquery'],
+            exports: 'Backbone'
+        },
+        'underscore': {
+            exports: '_'
+        }
+    }
 });
 
 requirejs(['jquery', 'hue/hue'], function($, Hue) {
