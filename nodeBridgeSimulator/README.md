@@ -27,10 +27,12 @@ node bridge.js
 [
     {
         success: {
-            username: username
+            username: 'icanhazusername'
         }
     }
 ]
+```
+```JSON
 [
     {
         error: {
@@ -48,10 +50,11 @@ node bridge.js
 [
     {
         success: {
-            username: username
+            username: 'icanhazusername'
         }
     }
 ]
+```JSON
 [
     {
         error: {
