@@ -42,5 +42,5 @@ requirejs(['lib/jquery', 'lib/hue/hue'], function($, Hue) {
 ## Dependencies
 * [jQuery](http://jquery.com/)
 * [requireJS](http://requirejs.org/)
-* BackboneJS
-* UnderscoreJS
+* BackboneJS(http://backbonejs.org/)
+* UnderscoreJS(http://underscorejs.org/)
