@@ -1,4 +1,4 @@
-define(['jquery', 'backbone'], function($, Backbone) {
+define(['backbone'], function(Backbone) {
     
     return Backbone.Model.extend({
         
@@ -9,7 +9,7 @@ define(['jquery', 'backbone'], function($, Backbone) {
         },
         
         send: function() {
-            return $.ajax({
+            return Backbone.ajax({
                 url: this.get('url'),
                 type: this.get('method'),
                 data: this.get('body')
