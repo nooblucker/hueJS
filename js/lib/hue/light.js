@@ -1,5 +1,13 @@
-define(function() {
+define(['backbone'], function(Backbone) {
         
+    return Backbone.Model.extend({
+        urlRoot: function() {
+            return this.get('bridge').getApiUrl()+'/lights';
+        }
+    });
+        
+        
+/*
     function Light(bridge, id, state, type, name, modelid, swversion, pointsymbol) {
         this.bridge = bridge;
         this.id = id;
@@ -11,7 +19,9 @@ define(function() {
     }
     
     Light.prototype.setName = function(name) {
-        var req = this.bridge.doRequest('/lights/'+this.id, 'PUT', { name: name });
+        var req = this.bridge.doRequest('/lights/'+this.id, 'PUT', {
+            name: name
+        });
         req.done(function(response) {
             console.log(response);
         });
@@ -21,5 +31,6 @@ define(function() {
     };
 
     return Light;
+    */
     
 });

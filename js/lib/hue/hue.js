@@ -9,14 +9,25 @@ define(['backbone', './bridge'], function(Backbone, Bridge) {
         UPnPURL: "http://www.meethue.com/api/nupnp",
         
         initialize: function() {
-            this.bridges = new Bridges();
+            var that = this;
+            this.set('bridges', new Bridges());
             this.addLocalBridges();
+            this.get('bridges').on('add', function(bridge) {
+                bridge.on('connect', function() {
+                    that.trigger('connect', bridge);
+                });
+            });
+            this.get('bridges').on('remove', function(bridge) {
+                bridge.off('connect');
+            });
         },
         
         addBridge: function(ip) {
-            this.bridges.add(new Bridge({
+            var that = this;
+            var bridge = new Bridge({
                 ip: ip
-            }));
+            });
+            this.get('bridges').add(bridge);
             return this;
         },
         
@@ -34,7 +45,9 @@ define(['backbone', './bridge'], function(Backbone, Bridge) {
         
             .fail(function(response) {
                 console.log("always failing cause no JSONP");
-                _.each([ {ip: '192.168.2.109'} ], function(bridge) {
+                _.each([ {
+                    ip: '192.168.2.109'
+                } ], function(bridge) {
                     that.addBridge(bridge.ip);
                 });
             });

@@ -22,6 +22,9 @@ define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Reque
         return response[0] && response[0].error && response[0].error.type == ERRORS.linkButtonNotPressed;
     }
     
+    var Lights = Backbone.Collection.extend({
+        model: Light
+    });
     
     return Backbone.Model.extend({
         
@@ -34,6 +37,7 @@ define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Reque
         
         initialize: function() {
             this.set('username', localStorage.getItem('username') || '');
+            this.set('lights', new Lights());
             this.authorize();
             this.on('change:username', function(obj, username) {
                 localStorage.setItem('username', username);
@@ -52,8 +56,7 @@ define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Reque
                     AUTHORIZE_FAILCOUNT = 0;
                     that.createUsername(that.get('username'));
                 } else {
-                    console.log('hello '+that.get('username'));
-                    console.log(response);
+                    that.trigger('connect');
                 }
             });
             req.fail(function(response) {
@@ -96,6 +99,7 @@ define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Reque
             
                 else if (authorized(response)) {
                     that.set('username', response[0].success.username);
+                    that.trigger('connect');
                     clearTimeout(AUTHORIZE_TIMER);
                 }
             
