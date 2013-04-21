@@ -1,44 +1,46 @@
 # hueJS: a JavaScript library for Philips hue
 
 ## Install
-Download [requireJS](http://requirejs.org/) and [jQuery](http://jquery.com/) and put the files into a directory `js/lib`.
-Then put the hueJS library into `js/lib/hue`. So it should end up in a filestructure like:
+
+All you need is to unzip the `js` folder of hueJS somewhere on your filesystem.
+Let's say you have a HTML file `~/index.html` and you installed hueJS into the same directory. Then create a `main.js` file in the existing `~/js` directory. This is the file where you write your javascript code. You can then include `~/js/main.js` in your HTML file via requireJS. 
+
 ```
-js/
--lib/
---hue/
----hue.js
----bridge.js
----...
---jquery.js
---require.js
--main.js
-index.html
+<script data-main="js/main.js" src="js/lib/require.js"></script>
+```
+
+A minimal HTML file could look like this:
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>my first hue project</title>
+    </head>
+    <body>
+        <!-- content goes here -->
+        <script data-main="js/main.js" src="js/lib/require.js"></script>
+    </body>
+</html>
 ```
 
 ## Get started
 
 ```javascript
+// ~/js/main.js
+
 // require jquery and Hue class
 requirejs(['lib/jquery', 'lib/hue/hue'], function($, Hue) {
 
     // create instance of Hue
-    window.myHue = new Hue(function(bridges) {
-        if (bridges) {
-            // hue found local bridges and we can do stuff with the bridges
-        } else {
-            // no bridges were found, add one manually
-            this.addBridge('192.168.1.99');
-        }
-    });
-
-
-
-    
+    window.myHue = new Hue();
 
 });
 ```
 
 ## Dependencies
-* jQuery
-* requireJS
+* [jQuery](http://jquery.com/)
+* [requireJS](http://requirejs.org/)
+* BackboneJS
+* UnderscoreJS
