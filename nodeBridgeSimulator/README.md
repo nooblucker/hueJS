@@ -23,7 +23,7 @@ node bridge.js
 `GET /linkbutton` will enable user registration for 30 seconds.
 
 `GET /api/:username` will return success if the user is already registrated, or error, it the user is unknown:
-```JSON
+```
 [
     {
         success: {
@@ -32,7 +32,7 @@ node bridge.js
     }
 ]
 ```
-```JSON
+```
 [
     {
         error: {
@@ -46,7 +46,7 @@ node bridge.js
 
 
 `POST /api` with parameters `username` and `devicetype` will register the user, if the linkbutton has been pressed, or an error, if the button is not pressed:
-```JSON
+```
 [
     {
         success: {
@@ -54,7 +54,8 @@ node bridge.js
         }
     }
 ]
-```JSON
+```
+```
 [
     {
         error: {
