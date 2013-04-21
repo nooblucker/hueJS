@@ -25,15 +25,26 @@ app.get('/linkbutton', function(request, response) {
 });
 
 app.get('/api/:username', function(request, response) {
-    response.send(200, [
-        {
-            error: {
-                type: 1,
-                address: '/',
-                description: 'unauthorized user'
+    var username = request.params.username;
+    if (app.get('usernames').indexOf(username) > -1) {
+        response.send(200, [
+            {
+                success: {
+                    username: username
+                }
             }
-        }
-    ]);
+        ]);
+    } else {
+        response.send(200, [
+            {
+                error: {
+                    type: 1,
+                    address: '/',
+                    description: 'unauthorized user'
+                }
+            }
+        ]);
+    }
 });
 
 app.post('/api', function(request, response) {
@@ -44,7 +55,6 @@ app.post('/api', function(request, response) {
     }
     if (app.get('linkbuttonPushed')) {
         app.get('usernames').push(username);
-        console.log(app.get('usernames'));
         response.send(200, [
             {
                 success: {
