@@ -11,7 +11,7 @@ define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Reque
     var AUTHORIZE_TIMER = null;
     
     function unauthorized(response) {
-        return response[0] && response[0].error && response[0].error.type == ERRORS.unauthorizedUser;
+        return response[0] && response[0].error && response[0].error.type === ERRORS.unauthorizedUser;
     }
     
     function authorized(response) {
@@ -19,7 +19,7 @@ define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Reque
     }
     
     function linkButtonNotPressed(response) {
-        return response[0] && response[0].error && response[0].error.type == ERRORS.linkButtonNotPressed;
+        return response[0] && response[0].error && response[0].error.type === ERRORS.linkButtonNotPressed;
     }
     
     var Lights = Backbone.Collection.extend({
@@ -45,7 +45,7 @@ define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Reque
         },
         
         authorize: function() {
-            if (this.get('username') == '') {
+            if (this.get('username') === '') {
                 this.createUsername('');
                 return;
             }
@@ -87,7 +87,7 @@ define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Reque
             
                 if (linkButtonNotPressed(response)) {
                     if (AUTHORIZE_FAILCOUNT++ < MAX_RETRIES) {
-                        if (AUTHORIZE_FAILCOUNT == 1) {
+                        if (AUTHORIZE_FAILCOUNT === 1) {
                             alert('please push link button');
                         }
                         AUTHORIZE_TIMER = setTimeout(function() {
@@ -108,7 +108,7 @@ define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Reque
         },
         
         getApiUrl: function() {
-            var user = this.get('username') != '' ? '/'+this.get('username') : '';
+            var user = this.get('username') !== '' ? '/'+this.get('username') : '';
             return this.getBaseApiUrl()+user;
         },
         
