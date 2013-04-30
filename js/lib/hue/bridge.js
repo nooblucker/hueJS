@@ -56,6 +56,7 @@ define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Reque
                     AUTHORIZE_FAILCOUNT = 0;
                     that.createUsername(that.get('username'));
                 } else {
+                    that.set(response);
                     that.trigger('connect');
                 }
             });
