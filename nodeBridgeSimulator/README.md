@@ -5,8 +5,10 @@ As I started development of hueJS before getting my Hue starter kit, i needed to
 ## Install
 
 ```
-sudo npm install
+sudo npm install hue-simulator
 ```
+
+Or download the files from github.
 
 ## Run
 
