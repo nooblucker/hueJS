@@ -14,12 +14,12 @@ Or download the files from github.
 
 With [foreman](http://blog.daviddollar.org/2011/05/06/introducing-foreman.html) installed:
 ```
-foreman start
+sudo foreman start
 ```
 
 Or just 
 ```
-node bridge.js
+sudo node bridge.js
 ```
 
 ## Debugger
