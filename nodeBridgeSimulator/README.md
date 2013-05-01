@@ -1,4 +1,4 @@
-# A Node.js based Simulator for the Philips Hue API
+# A node.js based simulator for the Philips Hue API
 
 As I started development of hueJS before getting my Hue starter kit, i needed to test my code with a simulated bridge.
 
