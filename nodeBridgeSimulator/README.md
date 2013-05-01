@@ -22,7 +22,9 @@ node bridge.js
 
 ## Debugger
 
-Like a real bridge, you have a webinterface where you can enter commands. After starting the simulator, simply navigate your browser to the IP of the simulator. In the list on the left, you have predefined commands, so you don't always have to look up the correct URL and write the whole JSON-body of the message. Click on a button, and the command-form is filled with dummy data for this kind of command.
+Like a real bridge, you have a webinterface where you can enter commands. After starting the simulator, simply navigate your browser to the IP of the simulator.
+![screenshot of webinterface](debugger.png "Debugger webinterface")
+In the list on the left, you have predefined commands, so you don't always have to look up the correct URL and write the whole JSON-body of the message. Click on a button, and the command-form is filled with dummy data for this kind of command.
 
 ## Routes
 
