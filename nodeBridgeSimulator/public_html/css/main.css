@@ -1,0 +1,54 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    background: #EEEEEE;
+    color: black;
+    font-family: monospace;
+    font-size: 1.2em;
+}
+
+input, textarea, button {
+    padding: 0.3em;
+    font-family: monospace;
+}
+
+#debugger {
+    padding: 1em;
+}
+
+#request div, fieldset {
+    margin-bottom: 1em;
+}
+
+#request {
+    margin-bottom: 1em;
+}
+
+#req-body {
+    display: block;
+    width: 100%;
+    min-height: 15em;
+}
+
+#traffic {
+    float: left;
+    width: 50%;
+}
+
+label {
+    display: block;
+    vertical-align: top;
+}
+
+fieldset {
+    border: none;
+}
+
+.request, .response {
+    margin-bottom: 1em;
+    border-bottom: 1px solid #AAAAAA;
+    padding-bottom: 1em;
+}

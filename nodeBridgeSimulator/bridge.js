@@ -151,6 +151,10 @@ app.set('state', {
     }
 });
 
+app.get('/', function(req, res) {
+    res.redirect(301, 'index.html');
+});
+
 app.get('/linkbutton', function(request, response) {
     app.set('linkbuttonPushed', true);
     setTimeout(function() {

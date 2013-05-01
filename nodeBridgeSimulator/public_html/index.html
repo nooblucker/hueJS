@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hue Bridge Simulator Debugger</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="css/main.css" type="text/css" />
+    </head>
+    <body>
+        <div id="debugger">
+            <div id="traffic">
+                <form id="request">
+                    <div><label for="req-body">Message Body:</label> <textarea id="req-body" name="req-body"></textarea></div>
+                    <div><label for="req-url">URL:</label> <input type="text" id="req-url" name="req-url" value="/api" size="50"/></div>
+                    <fieldset>
+                        <label><input type="radio" name="req-method" value="GET" /> GET</label>
+                        <label><input type="radio" name="req-method" value="PUT" /> PUT</label>
+                        <label><input type="radio" name="req-method" value="POST" /> POST</label>
+                        <label><input type="radio" name="req-method" value="DELETE" /> DELETE</label>    
+                    </fieldset>
+                    <button type="submit">send</button>
+                </form>
+                <div id="log"></div>
+            </div>
+            <div id="state">full state to be shown here</div>
+        </div>
+        <script src="js/jquery.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
