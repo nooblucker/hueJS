@@ -1,6 +1,5 @@
 var express = require("express");
 var app = express();
-app.listen(80);
 
 var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -260,3 +259,5 @@ app.put('/api/:username/lights/:id', whitelist, function(req, res) {
     //var id = req.params.id;
     res.send(200, [{"success": {"/lights/1/name": "Bedroom Light"}}]);
 });
+
+module.exports = app;

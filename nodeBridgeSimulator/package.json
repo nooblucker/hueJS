@@ -9,7 +9,7 @@
   ],
   "license": "MIT",
   "author": "Sven Riecker <sven@nooblucker.de>",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
     "express": "3.x"
   },
@@ -20,7 +20,12 @@
   "readmeFilename": "README.md",
   "main": "bridge.js",
   "scripts": {
+    "start": "node ./bin/hue-simulator",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": ""
+  "repository": "",
+  "preferGlobal": "true",
+  "bin": {
+      "hue-simulator": "./bin/hue-simulator"
+  }
 }
