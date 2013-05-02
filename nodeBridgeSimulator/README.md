@@ -4,23 +4,21 @@ As I started development of hueJS before getting my Hue starter kit, i needed to
 
 ## Install
 
+Using npm:
+
 ```
-sudo npm install hue-simulator
+sudo npm install -g hue-simulator
 ```
 
-Or download the files from github.
+It should be installed [globally](http://blog.nodejitsu.com/npm-cheatsheet#Understanding_Global_versus_Local_installs_in_npm) by default, so you can start the simulator via command line, but to be sure we are adding the `-g` flag.
 
 ## Run
 
-With [foreman](http://blog.daviddollar.org/2011/05/06/introducing-foreman.html) installed:
+Start the simulator via command line:
 ```
-sudo foreman start
+sudo hue-simulator
 ```
-
-Or just 
-```
-sudo node bridge.js
-```
+Sudo is necessary because we want to listen on port 80.
 
 ## Debugger
 
