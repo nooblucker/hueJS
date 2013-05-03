@@ -15,15 +15,23 @@
                     <h3>commands</h3>
                     <ul class="unstyled" id="commands">
                         <li><button class='btn btn-block' type="button" data-url='/api' data-body='{"devicetype":"test user","username":"newdeveloper"}' data-method='POST' >create user</button></li>
+                        <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper' data-body='' data-method='GET' >get full state</button></li>
                         <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/lights' data-body='' data-method='GET' >get all lights</button></li>
+                        <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/lights/1' data-body='' data-method='GET' >get light state</button></li>
+                        <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/lights/1' data-body='{"name":"new name"}' data-method='PUT' >rename light</button></li>
+                        <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/lights/1/state' data-body='{
+    "hue": 50000,
+    "on": true,
+    "bri": 200
+}' data-method='PUT' >set light state</button></li>
                     </ul>
                 </div>
                 <div class="span10">
                     <div id="traffic">
                         <form id="request">
                             <h1>Send command</h1>
-                            <div><label for="req-body">Message Body:</label> <textarea id="req-body" name="req-body" class='span12' ></textarea></div>
-                            <div><label for="req-url">URL:</label> <input type="text" id="req-url" name="req-url" class="input-xlarge" value="/api" /></div>
+                            <div><label for="req-body">Message Body:</label> <textarea id="req-body" name="req-body" class='span12' rows="10" ></textarea></div>
+                            <div><label for="req-url">URL:</label> <input type="text" id="req-url" name="req-url" class="input-xlarge" value="/api/newdeveloper" /></div>
                             <div id="req-methods">
                                 <label class="radio inline"><input type="radio" name="req-method" value="GET" checked="checked" /> GET</label>
                                 <label class="radio inline"><input type="radio" name="req-method" value="PUT"/> PUT</label>

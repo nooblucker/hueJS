@@ -31,7 +31,7 @@ app.use(express.static(__dirname + '/public_html'));
 app.use(express.bodyParser());
 app.use(allowCrossDomain);
 app.set('linkbuttonPushed', false);
-app.set('usernames', []);
+app.set('usernames', [ "newdeveloper" ]);
 app.set('state', {
     "lights": {
         "1": {
@@ -197,15 +197,37 @@ app.post('/api', function(request, response) {
 // Lights API
 
 app.get('/api/:username/lights', whitelist, function(req, res) {
-    res.send(200, {
-        "1": {
-            "name": "Bedroom"
-        },
-        "2": {
-            "name": "Kitchen"
-        }
+    // get light state
+    var lights = app.get('state').lights;
+    // only send names of lights
+    var result = mapObject(lights, function(light) {
+        return selectSubsetFromJSON(light, 'name');
     });
+    res.send(200, result);
 });
+
+var mapObject = function(obj, fn) {
+    var result = {};
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            result[key] = fn(obj[key]);
+        }
+    }
+    return result;
+};
+
+var selectSubsetFromJSON = function(json, keys) {
+    var result = {};
+    // cast 'keys' to array
+    if (typeof keys !== 'object') {
+        keys = [ keys ];
+    }
+    console.log(keys);
+    for(var i=0; i < keys.length; i++) {
+        result[keys[i]] = json[keys[i]];
+    }
+    return result;
+};
 
 app.get('/api/:username/lights/new', whitelist, function(req, res) {
     res.send(200, {
@@ -224,40 +246,42 @@ app.post('/api/:username/lights', whitelist, function(req, res) {
 });
 
 app.get('/api/:username/lights/:id', whitelist, function(req, res) {
-    res.send(200, {
-        "state": {
-            "hue": 50000,
-            "on": true,
-            "effect": "none",
-            "alert": "none",
-            "bri": 200,
-            "sat": 200,
-            "ct": 500,
-            "xy": [0.5, 0.5],
-            "reachable": true,
-            "colormode": "hs"
-        },
-        "type": "Living Colors",
-        "name": "LC 1",
-        "modelid": "LC0015",
-        "swversion": "1.0.3",
-        "pointsymbol": {
-            "1": "none",
-            "2": "none",
-            "3": "none",
-            "4": "none",
-            "5": "none",
-            "6": "none",
-            "7": "none",
-            "8": "none"
-        }
-    });
+    var id = req.params.id;
+    res.send(200, app.get('state').lights[id]);
 });
 
 app.put('/api/:username/lights/:id', whitelist, function(req, res) {
-    //var name = req.body.name;
-    //var id = req.params.id;
-    res.send(200, [{"success": {"/lights/1/name": "Bedroom Light"}}]);
+    var name = req.body.name;
+    var id = req.params.id;
+    app.get('state').lights[id]["name"] = name;
+    var success = {};
+    success["/lights/"+id+"/name"] = name;
+    res.send(200, [{ "success": success }]);
+});
+
+app.put('/api/:username/lights/:id/state', whitelist, function(req, res) {
+    var id = req.params.id;
+    var response = [];
+    
+    console.log(req.body);
+    
+    var state = app.get('state').lights[id].state;
+    for (var propertyToBeUpdated in req.body) {
+        if (req.body.hasOwnProperty(propertyToBeUpdated)) {
+            if (state.hasOwnProperty(propertyToBeUpdated)) {
+                var newValue = req.body[propertyToBeUpdated];
+                state[propertyToBeUpdated] = newValue;
+                // TODO: currently all values are treated as string ! this could lead to bugs and has to be fixed
+                var success = {};
+                success["/lights/"+id+"state"] = newValue;
+                response.push({
+                    "success": success
+                });
+            }
+        }
+    }
+
+    res.send(200, response);
 });
 
 module.exports = app;
