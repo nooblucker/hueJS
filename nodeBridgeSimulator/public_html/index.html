@@ -11,11 +11,10 @@
     <body>
         <div id="debugger" class="container-fluid">
             <div class="row-fluid">
-                <div class="span2">
+                <div class="span2" id="commands">
                     <h3>commands</h3>
-                    <ul class="unstyled" id="commands">
-                        <li><button class='btn btn-block' type="button" data-url='/api' data-body='{"devicetype":"test user","username":"newdeveloper"}' data-method='POST' >create user</button></li>
-                        <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper' data-body='' data-method='GET' >get full state</button></li>
+                    <h4>Lights API</h4>
+                    <ul class="unstyled">
                         <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/lights' data-body='' data-method='GET' >get all lights</button></li>
                         <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/lights/1' data-body='' data-method='GET' >get light state</button></li>
                         <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/lights/1' data-body='{"name":"new name"}' data-method='PUT' >rename light</button></li>
@@ -25,13 +24,21 @@
     "bri": 200
 }' data-method='PUT' >set light state</button></li>
                     </ul>
+                    <h4>Configuration API</h4>
+                    <ul class="unstyled">
+                        <li><button class='btn btn-block' type="button" data-url='/api' data-body='{"devicetype":"test user","username":"newdeveloper"}' data-method='POST' >create user</button></li>
+                        <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/config' data-body='' data-method='GET' >get configuration</button></li>
+                        <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/config' data-body='{"proxyport":100}' data-method='PUT' >modify configuration</button></li>
+                        <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/config/whitelist/usernameToBeDeleted' data-body='' data-method='DELETE' >delete user</button></li>
+                        <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper' data-body='' data-method='GET' >get full state</button></li>
+                    </ul>
                 </div>
                 <div class="span10">
                     <div id="traffic">
                         <form id="request">
                             <h1>Send command</h1>
                             <div><label for="req-body">Message Body:</label> <textarea id="req-body" name="req-body" class='span12' rows="10" ></textarea></div>
-                            <div><label for="req-url">URL:</label> <input type="text" id="req-url" name="req-url" class="input-xlarge" value="/api/newdeveloper" /></div>
+                            <div><label for="req-url">URL:</label> <input type="text" id="req-url" name="req-url" class="input-xxlarge" value="/api/newdeveloper" /></div>
                             <div id="req-methods">
                                 <label class="radio inline"><input type="radio" name="req-method" value="GET" checked="checked" /> GET</label>
                                 <label class="radio inline"><input type="radio" name="req-method" value="PUT"/> PUT</label>
