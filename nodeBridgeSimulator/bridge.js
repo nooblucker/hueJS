@@ -161,42 +161,6 @@ app.get('/linkbutton', function(request, response) {
     response.send(200, "link button pushed. you have 30 seconds to register new usernames");
 });
 
-app.get('/api/:username', whitelist, function(request, response) {
-    response.send(200, app.get('state'));
-});
-
-app.post('/api', function(request, response) {
-    var devicetype = request.body.devicetype;
-    var username = request.body.username;
-    if (username === '') {
-        username = "letmegeneratethatforyou";
-    }
-    if (app.get('state').config.linkbutton) {
-        app.get('state').config.whitelist[username] = {
-            "last use date": "2012-10-29T12:00:00",
-            "create date": "2012-10-29T12:00:00",
-            "name": devicetype
-        };
-        response.send(200, [
-            {
-                success: {
-                    username: username
-                }
-            }
-        ]);
-    } else {
-        response.send(200, [
-            {
-                error: {
-                    type: 101,
-                    address: '',
-                    description: 'link button not pressed'
-                }
-            }
-        ]);
-    }
-});
-
 // Lights API
 
 app.get('/api/:username/lights', whitelist, function(req, res) {
@@ -264,27 +228,83 @@ app.put('/api/:username/lights/:id', whitelist, function(req, res) {
 
 app.put('/api/:username/lights/:id/state', whitelist, function(req, res) {
     var id = req.params.id;
-    var response = [];
-
-    console.log(req.body);
-
     var state = app.get('state').lights[id].state;
-    for (var propertyToBeUpdated in req.body) {
-        if (req.body.hasOwnProperty(propertyToBeUpdated)) {
-            if (state.hasOwnProperty(propertyToBeUpdated)) {
-                var newValue = req.body[propertyToBeUpdated];
-                state[propertyToBeUpdated] = newValue;
+    var response = updateProperties(state, req.body, "/lights/"+id+"/state/");
+    res.send(200, response);
+});
+
+var updateProperties = function(obj, props, successPath) {
+    var response = [];
+    for (var propertyToBeUpdated in props) {
+        if (props.hasOwnProperty(propertyToBeUpdated)) {
+            if (obj.hasOwnProperty(propertyToBeUpdated)) {
+                var newValue = props[propertyToBeUpdated];
+                obj[propertyToBeUpdated] = newValue;
                 // TODO: currently all values are treated as string ! this could lead to bugs and has to be fixed
                 var success = {};
-                success["/lights/" + id + "/state/" + propertyToBeUpdated] = newValue;
+                success[successPath + propertyToBeUpdated] = newValue;
                 response.push({
                     "success": success
                 });
             }
         }
     }
+    return response;
+};
 
-    res.send(200, response);
+// Configuration API
+
+app.post('/api', function(request, response) {
+    var devicetype = request.body.devicetype;
+    var username = request.body.username;
+    if (username === '') {
+        username = "letmegeneratethatforyou";
+    }
+    if (app.get('state').config.linkbutton) {
+        app.get('state').config.whitelist[username] = {
+            "last use date": "2012-10-29T12:00:00",
+            "create date": "2012-10-29T12:00:00",
+            "name": devicetype
+        };
+        response.send(200, [
+            {
+                success: {
+                    username: username
+                }
+            }
+        ]);
+    } else {
+        response.send(200, [
+            {
+                error: {
+                    type: 101,
+                    address: '',
+                    description: 'link button not pressed'
+                }
+            }
+        ]);
+    }
 });
+
+app.get('/api/:username/config', whitelist, function(request, response) {
+    response.send(200, app.get('state').config);
+});
+
+app.put('/api/:username/config', whitelist, function(request, response) {
+    var response = updateProperties(app.get('state').config, req.body, "/config/");
+    response.send(200, response);
+});
+
+app.delete('/api/:username/config/whitelist/:userToBeDeleted', function(req, res) {
+    var deleteUsername = req.params.userToBeDeleted;
+    delete app.get('state').config.whitelist[deleteUsername];
+    res.send(200, [ { "success": "/config/whitelist/"+deleteUsername+" deleted." } ]);
+});
+
+app.get('/api/:username', whitelist, function(request, response) {
+    response.send(200, app.get('state'));
+});
+
+
 
 module.exports = app;
