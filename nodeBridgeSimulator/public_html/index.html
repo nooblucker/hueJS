@@ -24,6 +24,17 @@
     "bri": 200
 }' data-method='PUT' >set light state</button></li>
                     </ul>
+                    <h4>Groups API</h4>
+                    <ul class="unstyled">
+                        <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/groups' data-body='' data-method='GET' >get all groups</button></li>
+                        <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/groups/1' data-body='' data-method='GET' >get group attributes</button></li>
+                        <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/groups/1' data-body='{ "name":"Bedroom", "lights": ["1"] }' data-method='PUT' >set group attributes</button></li>
+                        <li><button class='btn btn-block' type="button" data-url='/api/newdeveloper/groups/1/action' data-body='{
+    "on": true,
+    "hue": 2000,
+    "effect": "colorloop"
+}' data-method='PUT' >set group state</button></li>
+                    </ul>
                     <h4>Configuration API</h4>
                     <ul class="unstyled">
                         <li><button class='btn btn-block' type="button" data-url='/api' data-body='{"devicetype":"test user","username":"newdeveloper"}' data-method='POST' >create user</button></li>
