@@ -10,7 +10,7 @@ var allowCrossDomain = function(req, res, next) {
 var whitelist = function(req, res, next) {
     if (req && req.params && req.params.hasOwnProperty('username')) {
         var username = req.params.username;
-        if (username !== '' && app.get('usernames').indexOf(username) > -1) {
+        if (app.get('state').config.whitelist.hasOwnProperty(username)) {
             req.username = username;
             next();
         }
@@ -30,8 +30,7 @@ app.use(express.logger());
 app.use(express.static(__dirname + '/public_html'));
 app.use(express.bodyParser());
 app.use(allowCrossDomain);
-app.set('linkbuttonPushed', false);
-app.set('usernames', [ "newdeveloper" ]);
+
 app.set('state', {
     "lights": {
         "1": {
@@ -155,9 +154,9 @@ app.get('/', function(req, res) {
 });
 
 app.get('/linkbutton', function(request, response) {
-    app.set('linkbuttonPushed', true);
+    app.get('state').config.linkbutton = true;
     setTimeout(function() {
-        app.set('linkbuttonPushed', false);
+        app.get('state').config.linkbutton = false;
     }, 30000);
     response.send(200, "link button pushed. you have 30 seconds to register new usernames");
 });
@@ -172,8 +171,12 @@ app.post('/api', function(request, response) {
     if (username === '') {
         username = "letmegeneratethatforyou";
     }
-    if (app.get('linkbuttonPushed')) {
-        app.get('usernames').push(username);
+    if (app.get('state').config.linkbutton) {
+        app.get('state').config.whitelist[username] = {
+            "last use date": "2012-10-29T12:00:00",
+            "create date": "2012-10-29T12:00:00",
+            "name": devicetype
+        };
         response.send(200, [
             {
                 success: {
@@ -220,10 +223,10 @@ var selectSubsetFromJSON = function(json, keys) {
     var result = {};
     // cast 'keys' to array
     if (typeof keys !== 'object') {
-        keys = [ keys ];
+        keys = [keys];
     }
     console.log(keys);
-    for(var i=0; i < keys.length; i++) {
+    for (var i = 0; i < keys.length; i++) {
         result[keys[i]] = json[keys[i]];
     }
     return result;
@@ -255,16 +258,16 @@ app.put('/api/:username/lights/:id', whitelist, function(req, res) {
     var id = req.params.id;
     app.get('state').lights[id]["name"] = name;
     var success = {};
-    success["/lights/"+id+"/name"] = name;
-    res.send(200, [{ "success": success }]);
+    success["/lights/" + id + "/name"] = name;
+    res.send(200, [{"success": success}]);
 });
 
 app.put('/api/:username/lights/:id/state', whitelist, function(req, res) {
     var id = req.params.id;
     var response = [];
-    
+
     console.log(req.body);
-    
+
     var state = app.get('state').lights[id].state;
     for (var propertyToBeUpdated in req.body) {
         if (req.body.hasOwnProperty(propertyToBeUpdated)) {
@@ -273,7 +276,7 @@ app.put('/api/:username/lights/:id/state', whitelist, function(req, res) {
                 state[propertyToBeUpdated] = newValue;
                 // TODO: currently all values are treated as string ! this could lead to bugs and has to be fixed
                 var success = {};
-                success["/lights/"+id+"state"] = newValue;
+                success["/lights/" + id + "/state/" + propertyToBeUpdated] = newValue;
                 response.push({
                     "success": success
                 });
