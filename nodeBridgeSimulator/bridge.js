@@ -291,8 +291,8 @@ app.get('/api/:username/config', whitelist, function(request, response) {
 });
 
 app.put('/api/:username/config', whitelist, function(request, response) {
-    var response = updateProperties(app.get('state').config, req.body, "/config/");
-    response.send(200, response);
+    var result = updateProperties(app.get('state').config, request.body, "/config/");
+    response.send(200, result);
 });
 
 app.delete('/api/:username/config/whitelist/:userToBeDeleted', function(req, res) {
