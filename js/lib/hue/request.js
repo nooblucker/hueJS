@@ -4,16 +4,19 @@ define(['backbone'], function(Backbone) {
         
         defaults: {
             url: '',
-            body: {},
+            body: null,
             method: 'GET'
         },
         
         send: function() {
-            return Backbone.ajax({
+            var options = {
                 url: this.get('url'),
-                type: this.get('method'),
-                data: this.get('body')
-            });
+                type: this.get('method')
+            };
+            if (this.get('body')) {
+                options.data = JSON.stringify(this.get('body'));
+            }
+            return Backbone.ajax(options);
         }
         
     });

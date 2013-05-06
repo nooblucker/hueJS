@@ -1,4 +1,4 @@
-define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Request) {
+define(['backbone', 'hue/light', 'hue/request', 'hue/uuid'], function(Backbone, Light, Request) {
 
     var ERRORS = {
         unauthorizedUser: 1,
@@ -28,6 +28,15 @@ define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Reque
     
     return Backbone.Model.extend({
         
+        setOn: function(bool) {
+            var req = this.doRequest('/groups/0/action', 'PUT', {
+                on: bool
+            });
+            req.done(function() {
+                alert('lights on? '+bool);
+            });
+        },
+        
         devicetype: 'hueJS',
         
         defaults: {
@@ -46,7 +55,7 @@ define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Reque
         
         authorize: function() {
             if (this.get('username') === '') {
-                this.createUsername('');
+                this.createUsername(Math.uuid(10));
                 return;
             }
             var req = this.doRequest();
@@ -79,8 +88,8 @@ define(['backbone', 'hue/light', 'hue/request'], function(Backbone, Light, Reque
                 url: this.getBaseApiUrl(),
                 method: 'POST',
                 body: {
-                    devicetype: this.devicetype,
-                    username: username
+                    "devicetype": this.devicetype,
+                    "username": username
                 }
             });
             request.send().done(function(response) {
