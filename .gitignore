@@ -164,3 +164,4 @@ pip-log.txt
 /nbproject/private/
 /nbproject/
 /HTML5Application/nbproject/private
+!/nodeBridgeSimulator/bin/
