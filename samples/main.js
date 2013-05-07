@@ -11,7 +11,7 @@ requirejs.config({
     }
 });
 
-requirejs(['jquery', 'hue/hue', 'underscore', 'backbone'], function($, Hue, _, Backbone) {
+requirejs(['jquery', 'hue/hue', 'underscore', 'backbone', 'i-color'], function($, Hue, _, Backbone) {
 
     var hue = new Hue();
 
@@ -23,7 +23,8 @@ requirejs(['jquery', 'hue/hue', 'underscore', 'backbone'], function($, Hue, _, B
         events: {
             "click .all-on": "allOn",
             "click .all-off": "allOff",
-            "click .toggleOnOff": "toggleOnOff"
+            "click .toggleOnOff": "toggleOnOff",
+            "change .color": "setHSV"
         },
         allOn: function() {
             this.model.setGroupState(0, {on: true});
@@ -33,8 +34,14 @@ requirejs(['jquery', 'hue/hue', 'underscore', 'backbone'], function($, Hue, _, B
         },
         toggleOnOff: function(e) {
             var lightId = $(e.target).parents('.light').attr('data-id');
-            var bridge = this.model;
             this.model.setLightState(lightId, {on: !this.model.get('data').lights[lightId].state.on});
+        },
+        setHSV: function(e) {
+            var lightId = $(e.target).parents('.light').attr('data-id');
+            var hex = $(e.target).val();
+            var hsv = Color.convert(hex, 'hsv');
+            console.log(hsv);
+            this.model.setLightState(lightId, { hue: Math.round(hsv.h/359*65534), bri: Math.round(hsv.v*2.55), sat: Math.round(hsv.s*2.55)});
         },
         initialize: function() {
             this.listenTo(this.model, 'requestlinkbutton', this.requestLinkbutton);

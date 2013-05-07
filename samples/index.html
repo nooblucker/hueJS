@@ -30,7 +30,7 @@
                 <ul class="lights">
                 <% _.each(data.lights, function(light, id) { %>
                     <li class="light" data-id="<%- id %>">
-                        <div><%- light.name %> <button type="button" class="toggleOnOff"><%- light.state.on %></button></div>
+                        <div><%- light.name %> <button type="button" class="toggleOnOff"><%- light.state.on %></button> <input class="color" type="color" /></div>
                     </li>
                 <% }); %>
                 </ul>
