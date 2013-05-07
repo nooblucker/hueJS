@@ -11,7 +11,7 @@ requirejs.config({
     }
 });
 
-requirejs(['jquery', 'hue/hue', 'underscore', 'backbone', 'i-color'], function($, Hue, _, Backbone) {
+requirejs(['jquery', 'hue/hue', 'underscore', 'backbone', 'hue-color-converter'], function($, Hue, _, Backbone, ColorConverter) {
 
     var hue = new Hue();
 
@@ -36,12 +36,16 @@ requirejs(['jquery', 'hue/hue', 'underscore', 'backbone', 'i-color'], function($
             var lightId = $(e.target).parents('.light').attr('data-id');
             this.model.setLightState(lightId, {on: !this.model.get('data').lights[lightId].state.on});
         },
+        hexToColorState: function(hexString, modelId) {
+            var xyb = ColorConverter.hexStringToXyBri(hexString);
+            var color = ColorConverter.xyBriForModel(xyb, modelId);
+            return {bri: Math.round(255 * color.bri), xy: [color.x, color.y]}
+        },
         setHSV: function(e) {
             var lightId = $(e.target).parents('.light').attr('data-id');
-            var hex = $(e.target).val();
-            var hsv = Color.convert(hex, 'hsv');
-            console.log(hsv);
-            this.model.setLightState(lightId, { hue: Math.round(hsv.h/359*65534), bri: Math.round(hsv.v*2.55), sat: Math.round(hsv.s*2.55)});
+            var hexString = $(e.target).val().replace('#', '');
+            var modelId = this.model.get('data').lights[lightId].modelid;
+            this.model.setLightState(lightId, this.hexToColorState(hexString, modelId));
         },
         initialize: function() {
             this.listenTo(this.model, 'requestlinkbutton', this.requestLinkbutton);
