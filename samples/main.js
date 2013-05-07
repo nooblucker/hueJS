@@ -11,32 +11,68 @@ requirejs.config({
     }
 });
 
-requirejs(['jquery', 'hue/hue'], function($, Hue) {
-    
-    window.myHue = new Hue();
-    
-    myHue.addBridge('192.168.2.103');
-    
-    myHue.on('connect', function(bridge) {
-        alert('welcome ' + bridge.get('username') + "@" + bridge.get('ip'));
+requirejs(['jquery', 'hue/hue', 'underscore', 'backbone'], function($, Hue, _, Backbone) {
+
+    var hue = new Hue();
+
+    window.hue = hue;
+
+    var BridgeView = Backbone.View.extend({
+        tagName: "li",
+        template: _.template($('#bridge-template').html()),
+        events: {
+            "click .all-on": "allOn",
+            "click .all-off": "allOff",
+            "click .toggleOnOff": "toggleOnOff"
+        },
+        allOn: function() {
+            this.model.setGroupState(0, {on: true});
+        },
+        allOff: function() {
+            this.model.setGroupState(0, {on: false});
+        },
+        toggleOnOff: function(e) {
+            var lightId = $(e.target).parents('.light').attr('data-id');
+            var bridge = this.model;
+            this.model.setLightState(lightId, {on: !this.model.get('data').lights[lightId].state.on});
+        },
+        initialize: function() {
+            this.listenTo(this.model, 'requestlinkbutton', this.requestLinkbutton);
+            this.listenTo(this.model, 'connect', this.render);
+            this.listenTo(this.model, 'change:data', this.render);
+            this.listenTo(this.model, 'destroy', this.remove);
+        },
+        requestLinkbutton: function() {
+            alert('Please press linkbutton');
+        },
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
+        }
     });
-    
-    $("#hue-connect").on('submit', function(event) {
-        event.preventDefault();
-        myHue.addBridge($("#hue-connect input[name='ip']").val());
+
+
+    var AppView = Backbone.View.extend({
+        el: $("#app"),
+        initialize: function() {
+            this.listenTo(hue.get('bridges'), 'connect', this.addOne);
+            this.listenTo(hue.get('bridges'), 'all', this.render);
+            this.bridges = $("#bridges");
+        },
+        render: function() {
+
+        },
+        addOne: function(bridge) {
+            var view = new BridgeView({model: bridge});
+            this.bridges.append(view.render().el);
+        }
     });
-    
-    var setOn = function(bool) {
-        window.myHue.get('bridges').at(0).setOn(bool);
-    };
-    var switchOn = function() {
-        setOn(true);
-    };
-    var switchOff = function() {
-        setOn(false);
-    };
-    
-    $("#command-all-on").on('click', switchOn);
-    $("#command-all-off").on('click', switchOff);
-    
+
+    var app = new AppView();
+
+    $("#hue-connect").on("submit", function(e) {
+        hue.addBridge($(this).find("input").val());
+        e.preventDefault();
+    });
+
 });
