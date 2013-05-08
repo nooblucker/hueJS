@@ -155,7 +155,7 @@ define(['backbone', 'underscore', 'jquery', 'hue/request', 'hue/uuid'], function
 
                 else if (authorized(response)) {
                     that.set('username', response[0].success.username);
-                    that.trigger('connect', that);
+                    that.authorize();
                     clearTimeout(AUTHORIZE_TIMER);
                 }
 
