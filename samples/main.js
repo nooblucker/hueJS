@@ -67,11 +67,15 @@ requirejs(['jquery', 'hue/hue', 'underscore', 'backbone', 'hue-color-converter']
         el: $("#app"),
         initialize: function() {
             this.listenTo(hue.get('bridges'), 'connect', this.addOne);
+            this.listenTo(hue.get('bridges'), 'requestlinkbutton', this.requestlinkbutton);
             this.listenTo(hue.get('bridges'), 'all', this.render);
             this.bridges = $("#bridges");
         },
         render: function() {
 
+        },
+        requestlinkbutton: function() {
+            alert('please press the linkbutton on your bridge to authorize this device');
         },
         addOne: function(bridge) {
             var view = new BridgeView({model: bridge});
