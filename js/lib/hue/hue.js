@@ -11,15 +11,24 @@ define(['backbone', './bridge'], function(Backbone, Bridge) {
         initialize: function() {
             var that = this;
             this.set('bridges', new Bridges());
-            this.addLocalBridges();
+            this.addLastUsedBridge();
+            //this.addLocalBridges();
             this.get('bridges').on('add', function(bridge) {
                 bridge.on('connect', function() {
+                    localStorage.setItem('bridgeIp', bridge.get('ip'));
                     that.trigger('connect', bridge);
                 });
             });
             this.get('bridges').on('remove', function(bridge) {
                 bridge.off('connect');
             });
+        },
+        
+        addLastUsedBridge: function() {
+            var lastIp = localStorage.getItem('bridgeIp');
+            if (lastIp) {
+                this.addBridge(lastIp);
+            }
         },
         
         addBridge: function(ip) {

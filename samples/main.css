@@ -1,0 +1,6 @@
+#bridgelist {
+    display: none;
+}
+#bridgelist.no-bridges-connected {
+    display: block;
+}

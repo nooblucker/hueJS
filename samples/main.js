@@ -24,7 +24,12 @@ requirejs(['jquery', 'hue/hue', 'underscore', 'backbone', 'hue-color-converter']
             "click .all-on": "allOn",
             "click .all-off": "allOff",
             "click .toggleOnOff": "toggleOnOff",
-            "change .color": "setHSV"
+            "change .color": "setHSV",
+            "click .disconnect": "disconnect"
+        },
+        disconnect: function() {
+            hue.get('bridges').remove(this.model);
+            this.remove();
         },
         allOn: function() {
             this.model.setGroupState(0, {on: true});
@@ -72,7 +77,11 @@ requirejs(['jquery', 'hue/hue', 'underscore', 'backbone', 'hue-color-converter']
             this.bridges = $("#bridges");
         },
         render: function() {
-
+            if (hue.get('bridges').length) {
+                $("#bridgelist").removeClass("no-bridges-connected");
+            } else {
+                $("#bridgelist").addClass("no-bridges-connected");
+            }
         },
         requestlinkbutton: function() {
             alert('please press the linkbutton on your bridge to authorize this device');

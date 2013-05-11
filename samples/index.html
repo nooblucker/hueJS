@@ -3,11 +3,12 @@
     <head>
         <meta charset="utf-8" />
         <title>hue api javascript library</title>
+        <link rel="stylesheet" href="main.css" type="text/css" />
     </head>
     <body>
         <div id="page">
 
-            <div id="bridgelist">
+            <div id="bridgelist" class="no-bridges-connected">
                 <h1>Available Bridges</h1>
                 <iframe src="http://www.meethue.com/api/nupnp"></iframe>
                 <form id="hue-connect">
@@ -25,7 +26,7 @@
         <script type="text/template" id="bridge-template">
             <div class="bridge">
                 <h1><%- data.config.name %></h1>
-                <h2><%- data.config.ipaddress %></h2>
+                <h2><%- data.config.ipaddress %> <button type="button" class="disconnect">disconnect</button></h2>
                 <p><button type="button" class="all-on">all on</button> <button type="button" class="all-off">all off</button></p>
                 <ul class="lights">
                 <% _.each(data.lights, function(light, id) { %>
