@@ -31,7 +31,16 @@
                 <ul class="lights">
                 <% _.each(data.lights, function(light, id) { %>
                     <li class="light" data-id="<%- id %>">
-                        <div><%- light.name %> <button type="button" class="toggleOnOff"><%- light.state.on %></button> <input class="color" type="color" /></div>
+                        <div>
+                            <%- light.name %>
+                            <button type="button" class="toggleOnOff"><%- light.state.on %></button>
+                            <input class="color" type="color" />
+                            <div class="hue-bri-sat">
+                                <label>Hue: <input class="hue" type="range" min="0" max="65535" value="<%- light.state.hue %>" /></label>
+                                <label>Brightness: <input class="bri" type="range" min="0" max="255" value="<%- light.state.bri %>" /></label>
+                                <label>Saturation: <input class="sat" type="range" min="0" max="255" value="<%- light.state.sat %>" /></label>
+                            </div>
+                        </div>
                     </li>
                 <% }); %>
                 </ul>

@@ -4,3 +4,7 @@
 #bridgelist.no-bridges-connected {
     display: block;
 }
+
+.light {
+    margin-bottom: 2em;
+}

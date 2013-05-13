@@ -25,7 +25,10 @@ requirejs(['jquery', 'hue/hue', 'underscore', 'backbone', 'hue-color-converter']
             "click .all-off": "allOff",
             "click .toggleOnOff": "toggleOnOff",
             "change .color": "setHSV",
-            "click .disconnect": "disconnect"
+            "click .disconnect": "disconnect",
+            "change .hue": "setHueBriSat",
+            "change .bri": "setHueBriSat",
+            "change .sat": "setHueBriSat"
         },
         disconnect: function() {
             hue.get('bridges').remove(this.model);
@@ -51,6 +54,18 @@ requirejs(['jquery', 'hue/hue', 'underscore', 'backbone', 'hue-color-converter']
             var hexString = $(e.target).val().replace('#', '');
             var modelId = this.model.get('data').lights[lightId].modelid;
             this.model.setLightState(lightId, this.hexToColorState(hexString, modelId));
+        },
+        setHueBriSat: function(e) {
+            var $light = $(e.target).parents('.light');
+            var lightId = $light.attr('data-id');
+            var hue = $light.find('.hue').val();
+            var bri = $light.find('.bri').val();
+            var sat = $light.find('.sat').val();
+            this.model.setLightState(lightId, { 
+                "hue" : parseInt(hue, 10),
+                "bri" : parseInt(bri, 10),
+                "sat" : parseInt(sat, 10)
+            });
         },
         initialize: function() {
             this.listenTo(this.model, 'requestlinkbutton', this.requestLinkbutton);
